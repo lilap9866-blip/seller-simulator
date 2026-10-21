@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seller Sprint — Animated Shop Simulator</title>
+<style>
+:root{--o:#ee4d2d;--o2:#ff784c;--ink:#252b3a;--muted:#788094;--line:#e8ebf2;--green:#16a36a}
+*{box-sizing:border-box}body{margin:0;background:#f2f4f8;color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{height:64px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}.brand{display:flex;align-items:center;gap:10px;font-weight:900}.logo{width:38px;height:38px;border-radius:13px;background:var(--o);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:0 5px 14px #ee4d2d45}.brand small{display:block;color:#9ba1af;font-size:9px;letter-spacing:1.5px}.note{font-size:10px;color:#9299a8;font-weight:800}
+main{max-width:1280px;margin:22px auto;padding:0 18px 36px}.topstats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px;display:flex;gap:10px;align-items:center;box-shadow:0 5px 20px #1b25400a}.ico{width:38px;height:38px;border-radius:12px;background:#fff0eb;display:grid;place-items:center;font-size:20px;flex-shrink:0}.stat label{font-size:10px;color:var(--muted);font-weight:800;display:block}.stat strong{font-size:17px;display:block;margin-top:3px;white-space:nowrap}.stat small{font-size:9px;color:#9aa1ae}
+.scene-wrap{background:#fff;border:1px solid var(--line);border-radius:21px;padding:10px;box-shadow:0 12px 35px #1b254012}.scene-head{display:flex;justify-content:space-between;align-items:center;padding:7px 9px 12px;gap:12px}.scene-head h2{margin:0;font-size:15px}.scene-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.badge{font-size:10px;font-weight:900;background:#fff0eb;color:var(--o);border-radius:99px;padding:7px 10px;white-space:nowrap}
+canvas{display:block;width:100%;height:auto;aspect-ratio:16/8.1;border-radius:15px;background:#f5dfbf;cursor:pointer;touch-action:manipulation}.below{display:grid;grid-template-columns:1.25fr .9fr .9fr;gap:14px;margin-top:14px}.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 7px 25px #1b25400a;min-width:0}.panel h3{margin:0;font-size:14px}.hint{color:var(--muted);font-size:10px;margin:5px 0 13px;line-height:1.5}.orders{display:grid;gap:8px}.order{display:grid;grid-template-columns:39px 1fr auto;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;padding:9px}.prod{height:39px;border-radius:10px;background:#f5f6fa;display:grid;place-items:center;font-size:22px}.order b{font-size:11px;display:block}.order small{font-size:10px;color:var(--muted)}button{border:0;cursor:pointer;font:inherit;transition:.15s}button:active{transform:scale(.97)}.pack{background:var(--o);color:#fff;border-radius:9px;padding:8px 10px;font-size:10px;font-weight:900}.pack:disabled{background:#e6e9ef;color:#9aa1af;cursor:default}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.product{border:1px solid var(--line);border-radius:12px;padding:9px 5px;text-align:center}.product .emoji{font-size:27px;background:#f6f7fa;border-radius:9px;padding:7px}.product b{font-size:10px;display:block;margin:6px 0 3px}.product small{font-size:9px;color:var(--muted);display:block;margin-bottom:7px}.product button{background:#fff0eb;color:var(--o);font-weight:900;font-size:9px;padding:7px;border-radius:8px;width:100%}.product button:disabled{opacity:.45;cursor:default}.upgrade{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:9px;margin-top:8px}.upgrade .uico{font-size:22px}.upgrade div:nth-child(2){flex:1}.upgrade b{font-size:10px;display:block}.upgrade small{font-size:9px;color:var(--muted)}.upgrade button{background:#252b3a;color:#fff;border-radius:8px;padding:8px;font-size:9px;font-weight:900}.upgrade button:disabled{background:#e8ebf0;color:#9ba1af}.goals{display:grid;gap:10px}.goalrow{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:800}.goalrow span:last-child{color:var(--muted)}.bar{height:6px;background:#edf0f5;border-radius:99px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--o),#ffac54);border-radius:99px;transition:width .35s}.footer{text-align:center;color:#9aa1af;font-size:10px;line-height:1.6;padding:18px}
+.overlay{position:fixed;inset:0;background:#202638c9;backdrop-filter:blur(7px);z-index:10;display:grid;place-items:center;padding:18px}.modal{width:min(460px,100%);background:#fff;border-radius:24px;padding:29px;text-align:center;box-shadow:0 25px 80px #0003}.modal .big{font-size:56px;animation:bob 2s ease-in-out infinite}.modal h1{font-size:27px;letter-spacing:-1px;margin:8px 0}.modal p{font-size:13px;line-height:1.6;color:var(--muted)}.mainbtn{background:var(--o);color:#fff;font-weight:900;padding:13px 21px;border-radius:12px;box-shadow:0 5px 0 #bd351b}.mutebtn{background:#f2f4f8;color:#626b7c;font-weight:800;padding:12px 16px;border-radius:12px;margin-left:5px}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#202638;color:white;border-radius:12px;padding:12px 17px;font-size:12px;font-weight:800;z-index:20;transition:.25s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}.hidden{display:none!important}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@media(max-width:900px){.topstats{grid-template-columns:repeat(3,1fr)}.below{grid-template-columns:1fr 1fr}.below .panel:last-child{grid-column:1/-1}}@media(max-width:580px){header{padding:0 13px}.note{display:none}main{padding:0 10px;margin:12px auto}.topstats{grid-template-columns:repeat(2,1fr);gap:7px}.stat{padding:10px;gap:7px}.ico{width:31px;height:31px;font-size:17px}.stat strong{font-size:15px}.scene-wrap{padding:6px}.scene-head h2{font-size:13px}.scene-head p{font-size:10px}.below{grid-template-columns:1fr}.below .panel:last-child{grid-column:auto}.panel{padding:13px}canvas{aspect-ratio:4/3}}
+
+
+/* ===== PREMIUM UI POLISH ===== */
+
+:root {
+  --o: #ee4d2d;
+  --o2: #ff784c;
+  --ink: #252b3a;
+  --muted: #788094;
+  --line: #e8ebf2;
+  --green: #16a36a;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 8% 0%, #fff0e9 0, transparent 32%),
+    #f4f6fa;
+  color: var(--ink);
+  letter-spacing: -0.15px;
+}
+
+header {
+  box-shadow: 0 4px 20px #252b3a08;
+}
+
+.logo {
+  border-radius: 12px;
+  box-shadow: 0 6px 16px #ee4d2d38;
+  transition: transform .25s ease;
+}
+
+.logo:hover {
+  transform: rotate(-7deg) scale(1.06);
+}
+
+/* Dashboard cards */
+.stat {
+  border-radius: 17px;
+  border-color: #e9ebf2;
+  box-shadow: 0 5px 18px #252b3a08;
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    border-color .22s ease;
+}
+
+.stat:hover {
+  transform: translateY(-4px);
+  border-color: #ffd0c2;
+  box-shadow: 0 12px 28px #252b3a12;
+}
+
+.ico {
+  box-shadow: inset 0 0 0 1px #ee4d2d0a;
+}
+
+/* Main shop scene */
+.scene-wrap {
+  border-radius: 22px;
+  padding: 13px;
+  box-shadow: 0 12px 36px #252b3a0c;
+  transition: box-shadow .25s ease;
+}
+
+canvas {
+  border: 1px solid #f0d7c4;
+  box-shadow: inset 0 0 0 1px #ffffff70;
+}
+
+/* Content panels */
+.panel {
+  border-radius: 19px;
+  box-shadow: 0 7px 24px #252b3a08;
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
+}
+
+.panel:hover {
+  box-shadow: 0 12px 30px #252b3a10;
+}
+
+.panel h3 {
+  letter-spacing: -.35px;
+}
+
+/* Product cards */
+.order,
+.product,
+.upgrade {
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.order:hover,
+.product:hover,
+.upgrade:hover {
+  transform: translateY(-2px);
+  border-color: #ffc9b9;
+  box-shadow: 0 5px 14px #252b3a08;
+}
+
+.product .emoji {
+  transition: transform .2s ease;
+}
+
+.product:hover .emoji {
+  transform: scale(1.08);
+}
+
+/* Buttons */
+.pack,
+.product button,
+.upgrade button,
+.mainbtn,
+.mutebtn {
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    background .16s ease;
+}
+
+.pack:hover,
+.mainbtn:hover {
+  background: #d94022;
+  box-shadow: 0 7px 18px #ee4d2d30;
+  transform: translateY(-1px);
+}
+
+.product button:hover:not(:disabled) {
+  background: #ffe3d9;
+}
+
+.upgrade button:hover:not(:disabled) {
+  background: #3d4559;
+  transform: translateY(-1px);
+}
+
+.mutebtn:hover {
+  background: #e8ebf2;
+}
+
+/* Start and end screens */
+.overlay {
+  background: #202638c9;
+  backdrop-filter: blur(10px);
+}
+
+.modal {
+  border: 1px solid #ffffffb8;
+  box-shadow: 0 28px 90px #00000030;
+  animation: modalEnter .35s ease both;
+}
+
+.modal h1 {
+  line-height: 1.15;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* Premium Start Screen & Game Over */
+.modal {
+  width: min(480px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf7 100%);
+  border: 1px solid #ffe2d7;
+  border-radius: 26px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 28px 90px #11182740;
+  animation: modalEnter 0.35s ease-out;
+}
+
+.modal .big {
+  font-size: 58px;
+  margin-bottom: 10px;
+  animation: bob 2s ease-in-out infinite;
+}
+
+.modal .eyebrow {
+  display: inline-block;
+  color: #ee4d2d;
+  background: #fff0e9;
+  border: 1px solid #ffd8ca;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+}
+
+.modal h1 {
+  font-size: clamp(24px, 5vw, 31px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin: 14px 0 10px;
+}
+
+.modal p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.modal .feature-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.modal .feature {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #f0e6e1;
+  border-radius: 13px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #343b4b;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.modal .feature:hover {
+  transform: translateY(-3px);
+  border-color: #ee8a70;
+}
+
+.modal .feature span {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.modal .modal-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal .mainbtn,
+.modal .mutebtn {
+  margin: 0;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.modal .mainbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #bd351b;
+}
+
+.modal .mutebtn:hover {
+  transform: translateY(-2px);
+}
+
+.modal .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin: 22px 0;
+}
+
+.modal .summary-item {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #f0e6e1;
+  border-radius: 14px;
+  padding: 14px 6px;
+}
+
+.modal .summary-item strong {
+  display: block;
+  color: #ee4d2d;
+  font-size: clamp(12px, 3vw, 17px);
+  overflow-wrap: anywhere;
+}
+
+.modal .summary-item small {
+  display: block;
+  color: #788094;
+  font-size: 10px;
+  margin-top: 7px;
+}
+
+.modal .summary-note {
+  background: #fff4ed;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 11px;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 420px) {
+  .modal {
+    padding: 22px 17px;
+  }
+
+  .modal .feature-list {
+    gap: 7px;
+  }
+
+  .modal .feature {
+    padding: 10px;
+  }
+
+  .modal .summary-grid {
+    gap: 5px;
+  }
+}
+
+
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">S</div><div>Seller Sprint<small>ANIMATED SHOP SIMULATOR</small></div></div><div style="display:flex;align-items:center;gap:12px">
+  <button id="soundToggle" type="button"
+    style="background:#fff0eb;color:#ee4d2d;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:800">
+    🔊 Sound ON
+  </button>
+  <div class="note">INDEPENDENT FAN-MADE PORTFOLIO</div>
+</div>
+</header>
+<main>
+<div class="topstats">
+ <div class="stat"><div class="ico">🪙</div><div><label>Available cash</label><strong id="cash">Rp 500.000</strong><small>Business funds</small></div></div>
+ <div class="stat"><div class="ico">📦</div><div><label>Orders shipped</label><strong id="shipped">0</strong><small id="pending">3 waiting</small></div></div>
+ <div class="stat"><div class="ico">📈</div><div><label>Net profit</label><strong id="profit">Rp 0</strong><small>After product costs</small></div></div>
+ <div class="stat"><div class="ico">⭐</div><div><label>Seller rating</label><strong id="rating">100%</strong><small>Customer happiness</small></div></div>
+ <div class="stat"><div class="ico">⏱️</div><div><label>Workday timer</label><strong id="time">01:30</strong><small id="level">Level 1 · Starter</small></div></div>
+</div>
+<section class="scene-wrap">
+ <div class="scene-head"><div><h2>🏪 Your Shop Floor</h2><p>Tap a glowing station to interact. Watch your seller move and packages animate!</p></div><span class="badge" id="day">DAY 1 · SHOP OPEN</span></div>
+ <canvas id="scene" width="1200" height="610" aria-label="Animated isometric shop scene"></canvas>
+</section>
+<div class="below">
+ <section class="panel"><h3>📋 Order center</h3><p class="hint">Pack and ship customer orders. The seller walks to the packing counter.</p><div class="orders" id="orders"></div></section>
+ <section class="panel"><h3>🧺 Inventory garden</h3><p class="hint">Restock products to grow your shop, like tending a little business garden.</p><div class="products" id="products"></div></section>
+ <section class="panel"><h3>🚀 Shop upgrades</h3><p class="hint">Invest your profit to improve packing and attract more customers.</p><div id="upgrades"></div><h3 style="margin-top:17px">🎯 Daily missions</h3><div class="goals" id="goals" style="margin-top:10px"></div></section>
+</div>
+<div class="footer">Independent fan-made portfolio concept. Not affiliated with, endorsed by, or an official product of Shopee. All customers, products and game figures are fictional.</div>
+</main>
+<div class="overlay" id="overlay"><div class="modal" id="modal"><div class="big">🏪📦</div><div style="color:#ee4d2d;font-size:10px;font-weight:900;letter-spacing:1.5px">SELLER SPRINT SIMULATOR</div><h1>Build your little empire.</h1><p>Run an online shop in a lively animated store. Pack orders, restock products, earn profit and upgrade your business before the workday ends.</p><p>✨ Animated seller · Moving parcels · Sparkles · Customer orders · Upgrades</p><button class="mainbtn" id="start">Open my shop →</button> <button class="mutebtn" id="how">How to play</button><p style="font-size:10px">Fan-made portfolio demo · Not an official Shopee game</p></div></div>
+<div class="toast" id="toast"></div>
+<script>
+(()=> {
+const $=id=>document.getElementById(id), canvas=$('scene'),ctx=canvas.getContext('2d');
+const fmt=n=>'Rp '+Math.max(0,Math.round(n)).toLocaleString('id-ID');
+const P=[
+{id:'head',name:'Headphones',emoji:'🎧',price:125000,cost:78000,stock:5,step:2},
+{id:'bag',name:'Backpack',emoji:'🎒',price:89000,cost:52000,stock:4,step:3},
+{id:'shoe',name:'Sneakers',emoji:'👟',price:199000,cost:130000,stock:3,step:2},
+{id:'cup',name:'Tumbler',emoji:'🥤',price:59000,cost:28000,stock:5,step:4},
+{id:'watch',name:'Smart watch',emoji:'⌚',price:299000,cost:210000,stock:2,step:1},
+{id:'shirt',name:'T-shirt',emoji:'👕',price:59000,cost:25000,stock:6,step:4}
+];
+const upgrades=[{id:'pack',emoji:'📦',name:'Packing station',cost:120000,desc:'+Rp 8.000 profit per shipped order'},{id:'promo',emoji:'📣',name:'Smart promotions',cost:160000,desc:'More orders can arrive'},{id:'auto',emoji:'⚙️',name:'Order automation',cost:220000,desc:'Better seller rating and daily bonus'}];
+
+let S,raf,interval,filter='all',last=0,
+particles=[],floating=[],
+walk={x:650,y:370,tx:650,ty:370,phase:0},
+boxes=[],customers=[],packingJobs=[],deliveryJobs=[],sound=true;
+
+
+let audioCtx = null;
+
+function initAudio() {
+  const AudioEngine = window.AudioContext || window.webkitAudioContext;
+  if (!AudioEngine) return;
+
+  if (!audioCtx) audioCtx = new AudioEngine();
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playTone(freq, duration, type = 'sine', volume = 0.08, endFreq = null) {
+  if (!sound || !audioCtx) return;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const now = audioCtx.currentTime;
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, now);
+
+  if (endFreq !== null) {
+    osc.frequency.exponentialRampToValueAtTime(
+      Math.max(1, endFreq), now + duration
+    );
+  }
+
+gain.gain.setValueAtTime(0.001, now);
+gain.gain.exponentialRampToValueAtTime(
+  Math.min(volume * 2.5, 1),
+  now + 0.02
+);
+gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(now);
+  osc.stop(now + duration + 0.03);
+}
+
+// 📦 Kertas dan paket sedang dikemas
+function soundPack() {
+  if (!sound || !audioCtx) return;
+
+  playTone(650, 0.07, 'triangle', 0.045, 420);
+
+  setTimeout(() => {
+    playTone(900, 0.06, 'square', 0.025, 700);
+  }, 100);
+
+  setTimeout(() => {
+    playTone(520, 0.12, 'triangle', 0.04, 300);
+  }, 220);
+}
+
+// 🛵 Suara motor/kurir datang
+function soundVehicle() {
+  if (!sound || !audioCtx) return;
+
+  playTone(125, 0.55, 'sawtooth', 0.035, 72);
+
+  setTimeout(() => {
+    playTone(95, 0.4, 'sawtooth', 0.025, 145);
+  }, 180);
+}
+
+// ✅ Bunyi notifikasi pesanan sukses
+function soundSuccess() {
+  if (!sound || !audioCtx) return;
+
+  playTone(660, 0.13, 'sine', 0.06);
+
+  setTimeout(() => {
+    playTone(880, 0.2, 'sine', 0.065);
+  }, 120);
+}
+
+// 🪙 Bunyi koin saat mendapat profit
+function soundCoin() {
+  if (!sound || !audioCtx) return;
+
+  playTone(1050, 0.09, 'sine', 0.045);
+
+  setTimeout(() => {
+    playTone(1450, 0.13, 'sine', 0.04);
+  }, 75);
+}
+
+
+function reset(){clearInterval(interval);S={cash:500000,profit:0,sales:0,shipped:0,rating:100,time:90,level:1,xp:0,orders:[],owned:[],running:false,ended:false,seq:1234,claimed:[],day:1};P.forEach(p=>p.stock=({head:5,bag:4,shoe:3,cup:5,watch:2,shirt:6})[p.id]);S.orders=[{id:1234,p:'head',buyer:'Alya',status:'new'},{id:1235,p:'bag',buyer:'Rizky',status:'new'},{id:1236,p:'shoe',buyer:'Nadia',status:'new'}];particles=[];floating=[];boxes=[];customers=[];
+packingJobs=[];deliveryJobs=[];  walk={x:650,y:370,tx:650,ty:370,phase:0};render();draw();$('overlay').classList.remove('hidden');startModal();}
+
+
+function startModal() {
+  $('modal').innerHTML = `
+    <div class="big">🏪📦</div>
+
+    <div class="eyebrow">SELLER SPRINT SIMULATOR</div>
+
+    <h1>Build your little empire.</h1>
+
+    <p>
+      Every order is an opportunity. Manage your inventory,
+      ship customer orders, and grow your online store before
+      the workday ends.
+    </p>
+
+    <div class="feature-list">
+      <div class="feature">
+        <span>📦</span>
+        Pack & ship orders
+      </div>
+
+      <div class="feature">
+        <span>🛍️</span>
+        Manage your stock
+      </div>
+
+      <div class="feature">
+        <span>💰</span>
+        Grow your profit
+      </div>
+
+      <div class="feature">
+        <span>🚀</span>
+        Upgrade your shop
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="mainbtn" id="start">
+        Open my shop →
+      </button>
+
+      <button class="mutebtn" id="how">
+        How to play
+      </button>
+    </div>
+
+    <p style="font-size:10px;margin-top:20px">
+      Fan-made portfolio demo · Not an official Shopee game
+    </p>
+  `;
+
+  $('start').onclick = startGame;
+  $('how').onclick = how;
+}
+
+
+function how(){ $('modal').innerHTML='<div class="big">💡</div><h1>How to play</h1><p style="text-align:left"><b>1.</b> Click Pack & Ship to send an order. Your seller character walks to the counter.<br><br><b>2.</b> Restock products when stock is low. Restocking costs cash.<br><br><b>3.</b> Buy upgrades to earn more profit or attract customers.<br><br><b>4.</b> Complete missions before the 90-second timer ends. The canvas scene animates continuously while you play.</p><button class="mainbtn" id="back">Got it — play!</button>';$('back').onclick=startModal;}
+
+function startGame(){
+  if(S.running)return;
+
+  initAudio();
+  
+  $('overlay').classList.add('hidden');S.running=true;S.time=90;interval=setInterval(()=>{if(!S.running)return;S.time--;if(S.time===65||S.time===42||S.time===23){if(S.orders.filter(o=>o.status==='new').length<5){newOrder();toast('📬 A new order arrived!');}}if(S.time<=0)endGame();render();},1000);render();}
+
+
+function endGame() {
+  S.running = false;
+  S.ended = true;
+  clearInterval(interval);
+
+  $('overlay').classList.remove('hidden');
+
+  const successfulDay = S.profit >= 150000;
+
+  $('modal').innerHTML = `
+    <div class="big">${successfulDay ? '🏆' : '📦'}</div>
+
+    <div class="eyebrow">END-OF-DAY REPORT</div>
+
+    <h1>
+      ${successfulDay
+        ? 'Your shop is thriving!'
+        : 'Workday complete!'}
+    </h1>
+
+    <p>
+      ${successfulDay
+        ? 'Amazing work! You turned your shop into a growing business.'
+        : 'Every seller starts somewhere. Review your results and try again!'}
+    </p>
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <strong>${fmt(S.profit)}</strong>
+        <small>Net profit</small>
+      </div>
+
+      <div class="summary-item">
+        <strong>${S.shipped}</strong>
+        <small>Orders shipped</small>
+      </div>
+
+      <div class="summary-item">
+        <strong>${score()}</strong>
+        <small>Final score</small>
+      </div>
+    </div>
+
+    <div class="summary-note">
+      💡 <strong>Seller tip:</strong>
+      Keep your stock ready, ship orders quickly,
+      and invest in upgrades to improve your results.
+    </div>
+
+    <div class="modal-actions">
+      <button class="mainbtn" id="again">
+        ↻ Play another day
+      </button>
+    </div>
+
+    <p style="font-size:10px;margin-top:20px">
+      Fan-made portfolio concept · Not an official Shopee game
+    </p>
+  `;
+
+  $('again').onclick = reset;
+
+  render();
+}
+
+
+function score(){return Math.max(0,Math.round(S.profit/1000+S.shipped*100+S.rating*5+S.owned.length*250));}
+function newOrder(){const p=P[Math.floor(Math.random()*P.length)];S.orders.push({id:++S.seq,p:p.id,buyer:['Bima','Salsa','Dewi','Fajar','Intan','Kevin'][Math.floor(Math.random()*6)],status:'new'});customers.push({x:1050,y:365,life:3});}
+function ship(id){
+ if(!S.running){toast('Open your shop first!');return;}
+ const o=S.orders.find(a=>a.id===id),p=o&&P.find(a=>a.id===o.p);
+ if(!o||o.status!=='new')return;
+ if(p.stock<=0){toast('⚠️ Out of stock! Restock this product first.');return;}
+ p.stock--;o.status='packing';
+ packingJobs.push({orderId:o.id,product:p.id,progress:0});
+ walk.tx=430;
+walk.ty=365;
+soundPack();
+ toast('📦 Packing started: '+p.name);render();
+}
+
+
+
+function finishPacking(job) {
+  const o = S.orders.find(a => a.id === job.orderId);
+  const p = P.find(a => a.id === job.product);
+
+  if (!o || o.status !== 'packing' || !p) return;
+
+  // Pesanan menunggu proses pengiriman
+  o.status = 'delivery';
+
+  // Memulai animasi mobil kurir
+  deliveryJobs.push({
+    orderId: o.id,
+    product: p.id,
+    x: 1320,
+    y: 450,
+    stage: 'arriving',
+    timer: 0
+  });
+
+
+  
+  soundVehicle();
+  toast('🚚 Mobil kurir sedang datang!');
+  render();
+}
+
+// Menggambar paket yang bergerak menuju bagian belakang mobil.
+function drawLoadingParcel(van) {
+  if (van.stage !== "loading") return;
+
+  // Animasi berlangsung selama 45 frame.
+  const progress = Math.min(van.timer / 45, 1);
+
+  // Paket bergerak dari area seller ke belakang mobil.
+  const startX = walk.x + 45;
+  const startY = walk.y - 45;
+
+  const endX = van.x + 35;
+  const endY = van.y - 22;
+
+  const x = startX + (endX - startX) * progress;
+  const y = startY + (endY - startY) * progress
+          - Math.sin(progress * Math.PI) * 65;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Bayangan paket.
+  ctx.fillStyle = "rgba(80, 50, 30, 0.18)";
+  ctx.beginPath();
+  ctx.ellipse(0, 12, 15, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Kotak paket.
+  ctx.fillStyle = "#d99455";
+  ctx.beginPath();
+  ctx.roundRect(-12, -10, 24, 22, 3);
+  ctx.fill();
+
+  // Pita paket.
+  ctx.fillStyle = "#fff0d9";
+  ctx.fillRect(-3, -10, 6, 22);
+
+  // Label S.
+  ctx.fillStyle = "#ee4d2d";
+  ctx.font = "bold 10px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("S", 0, 5);
+
+  ctx.restore();
+}
+
+// 2. Menggambar mobil kurir dengan roda berputar dan arah yang benar.
+function drawCourierVan(van) {
+  const x = van.x;
+  const y = van.y;
+
+  // Mobil datang menghadap kanan, lalu berangkat menghadap kiri.
+  const direction = 1;
+
+  if (van.wheelAngle === undefined) van.wheelAngle = 0;
+
+  // Sudut roda diperbarui satu kali setiap frame.
+  if (van.stage === "arriving") {
+    van.wheelAngle += 0.18;
+  } else if (van.stage === "departing") {
+    van.wheelAngle -= 0.25;
+  }
+
+  ctx.save();
+  ctx.translate(x + 72, y);
+  ctx.scale(direction, 1);
+
+  // Bayangan.
+  ctx.fillStyle = "rgba(70, 45, 30, 0.18)";
+  ctx.beginPath();
+  ctx.ellipse(0, 34, 88, 11, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Badan mobil.
+  ctx.fillStyle = "#ee4d2d";
+  ctx.beginPath();
+  ctx.roundRect(-72, -42, 102, 64, 9);
+  ctx.fill();
+
+  // Kabin depan.
+  ctx.fillStyle = "#ff704b";
+  ctx.beginPath();
+  ctx.roundRect(27, -32, 48, 54, 8);
+  ctx.fill();
+
+  // Kaca depan.
+  ctx.fillStyle = "#c8eff8";
+  ctx.beginPath();
+  ctx.moveTo(36, -26);
+  ctx.lineTo(63, -26);
+  ctx.lineTo(69, -7);
+  ctx.lineTo(36, -7);
+  ctx.closePath();
+  ctx.fill();
+
+  // Lampu depan dan belakang.
+  ctx.fillStyle = "#fff3a6";
+  ctx.beginPath();
+  ctx.roundRect(72, 2, 5, 10, 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#ffb0a0";
+  ctx.beginPath();
+  ctx.roundRect(-73, -5, 5, 11, 2);
+  ctx.fill();
+
+  // Logo paket.
+  ctx.fillStyle = "#fff3dd";
+  ctx.beginPath();
+  ctx.roundRect(-57, -33, 32, 31, 5);
+  ctx.fill();
+
+  ctx.fillStyle = "#ee4d2d";
+  ctx.font = "bold 20px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("S", -41, -11);
+
+  // Tulisan pada sisi mobil.
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 9px Arial";
+  ctx.fillText("DELIVERY", -1, 12);
+
+  // Roda, pelek, dan jari-jari yang berputar.
+  for (const wheelX of [-42, 48]) {
+    ctx.fillStyle = "#303238";
+    ctx.beginPath();
+    ctx.arc(wheelX, 23, 13, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(wheelX, 23);
+    ctx.rotate(van.wheelAngle);
+
+    ctx.fillStyle = "#d9dce1";
+    ctx.beginPath();
+    ctx.arc(0, 0, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "#646b75";
+    ctx.lineWidth = 2;
+
+    for (let i = 0; i < 4; i++) {
+      ctx.rotate(Math.PI / 2);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, 6);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#454b56";
+    ctx.beginPath();
+    ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // Garis kecepatan saat mobil berangkat.
+  if (van.stage === "departing") {
+    ctx.strokeStyle = "#fff4e8";
+    ctx.lineWidth = 3;
+
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(-82 - i * 10, -22 + i * 12);
+      ctx.lineTo(-94 - i * 10, -22 + i * 12);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+
+  // Status di atas mobil.
+  ctx.fillStyle = "#b8442b";
+  ctx.font = "bold 13px Arial";
+  ctx.textAlign = "center";
+
+  if (van.stage === "arriving") {
+    ctx.fillText("Courier arriving...", x + 72, y - 54);
+  } else if (van.stage === "loading") {
+    ctx.fillText("Loading package...", x + 72, y - 54);
+  } else {
+    ctx.fillText("On the way!", x + 72, y - 54);
+  }
+}
+
+
+// 3. Memperbarui pergerakan mobil setiap frame.
+function updateCourierVans() {
+  for (let i = deliveryJobs.length - 1; i >= 0; i--) {
+    const van = deliveryJobs[i];
+
+    if (van.stage === "arriving") {
+      // Mobil mundur dari kanan ke kiri menuju depan seller.
+      const stopX = walk.x + 120;
+
+      van.x -= 3;
+
+      if (van.x <= stopX) {
+        van.x = stopX;
+        van.stage = "loading";
+        van.timer = 0;
+      }
+
+    } else if (van.stage === "loading") {
+  van.timer++;
+
+  // Beri waktu agar paket terlihat masuk ke mobil.
+  if (van.timer > 65) {
+    van.stage = "departing";
+  }
+
+
+    } else if (van.stage === "departing") {
+      // Mobil maju ke kanan untuk meninggalkan toko.
+      van.x += 3;
+
+      if (van.x > 1320) {
+        deliveryJobs.splice(i, 1);
+        completeCourierDelivery(van);
+      }
+    }
+  }
+}
+
+
+// 4. Menyelesaikan pesanan setelah mobil meninggalkan layar.
+function completeCourierDelivery(van) {
+  const order = S.orders.find(o => o.id === van.orderId);
+  const product = P.find(p => p.id === van.product);
+
+  if (!order || order.status !== "delivery" || !product) return;
+
+  order.status = "shipped";
+
+  soundSuccess();
+soundCoin();
+
+  // Perbarui saldo dan keuntungan.
+  S.cash += product.price;
+  S.sales += product.price;
+
+  const profit =
+    product.price -
+    product.cost +
+    (S.owned.includes("pack") ? 8000 : 0);
+
+  S.profit += profit;
+  S.shipped++;
+  S.xp += 55;
+
+  S.rating = Math.min(
+    100,
+    S.rating + (S.owned.includes("auto") ? 2 : 1)
+  );
+
+  // Tampilkan profit tanpa efek bintang atau koin acak.
+  floating.push({
+    x: 850,
+    y: 275,
+    text: "+" + fmt(profit),
+    life: 1
+  });
+
+  if (S.xp >= S.level * 165) {
+    S.xp -= S.level * 165;
+    S.level++;
+    toast("🎉 Level up! Level " + S.level);
+  } else {
+    toast("✅ Paket berhasil dikirim! Profit +" + fmt(profit));
+  }
+
+  checkGoals();
+  render();
+}
+
+
+function restock(id){if(!S.running){toast('Open your shop first!');return;}const p=P.find(a=>a.id===id),cost=p.cost*p.step;if(S.cash<cost){toast('Not enough cash to restock.');return;}S.cash-=cost;p.stock+=p.step;floating.push({x:300,y:440,text:'+'+p.step+' stock',life:1});for(let i=0;i<12;i++)particles.push({x:300,y:430,vx:(Math.random()-.5)*4,vy:-Math.random()*4,life:1,emoji:'🌱'});toast('🌱 '+p.name+' restocked!');render();}
+function buy(id){if(!S.running){toast('Open your shop first!');return;}const u=upgrades.find(a=>a.id===id);if(S.owned.includes(id)||S.cash<u.cost)return;S.cash-=u.cost;S.owned.push(id);if(id==='auto')S.rating=Math.min(100,S.rating+5);toast('🚀 Upgrade bought: '+u.name);render();}
+function checkGoals(){const goals=[['ship',S.shipped,3,35000],['profit',S.profit,150000,45000],['upgrade',S.owned.length,1,25000]];for(const [id,v,target,reward] of goals){if(v>=target&&!S.claimed.includes(id)){S.claimed.push(id);S.cash+=reward;floating.push({x:790,y:210,text:'BONUS +'+fmt(reward),life:1});toast('🎯 Mission complete! Bonus '+fmt(reward));}}}
+function render(){ $('cash').textContent=fmt(S.cash);$('shipped').textContent=S.shipped;$('pending').textContent=S.orders.filter(o=>o.status==='new').length+' waiting';$('profit').textContent=fmt(S.profit);$('rating').textContent=S.rating+'%';$('time').textContent='00:'+String(S.time).padStart(2,'0');$('level').textContent='Level '+S.level+' · '+(['Starter','Growing','Rising seller','Top seller'][Math.min(3,S.level-1)]);$('day').textContent='DAY '+S.day+' · '+(S.running?'SHOP OPEN':'SHOP READY');
+$('orders').innerHTML=S.orders.slice(-5).reverse().map(o=>{const p=P.find(x=>x.id===o.p);return `<div class="order"><div class="prod">${p.emoji}</div><div><b>#${o.id} · ${o.buyer}</b><small>${p.name} · ${fmt(p.price)}</small><small style="display:block;color:${o.status==='shipped'?'#16a36a':o.status==='packing'?'#ee4d2d':'#bd8100'}">${o.status==='shipped'?'✓ Shipped':o.status==='delivery'?'🚚 Courier is delivering…':
+o.status==='packing'?'📦 Packing in progress…':
+'● Waiting to pack'}</small></div><button class="pack" data-ship="${o.id}" ${o.status!=='new'?'disabled':''}>${o.status==='shipped'?'Done':
+o.status==='delivery'?'🚚 Delivering…':
+o.status==='packing'?'Packing…':'Pack & ship'}</button></div>`}).join('');
+$('orders').querySelectorAll('[data-ship]').forEach(b=>b.onclick=()=>ship(+b.dataset.ship));
+$('products').innerHTML=P.slice(0,3).map(p=>`<div class="product"><div class="emoji">${p.emoji}</div><b>${p.name}</b><small>${p.stock} in stock</small><button data-stock="${p.id}" ${!S.running||S.cash<p.cost*p.step?'disabled':''}>🌱 Restock<br>${fmt(p.cost*p.step)}</button></div>`).join('');$('products').querySelectorAll('[data-stock]').forEach(b=>b.onclick=()=>restock(b.dataset.stock));
+$('upgrades').innerHTML=upgrades.map(u=>`<div class="upgrade"><div class="uico">${u.emoji}</div><div><b>${u.name}</b><small>${u.desc}</small></div><button data-buy="${u.id}" ${!S.running||S.owned.includes(u.id)||S.cash<u.cost?'disabled':''}>${S.owned.includes(u.id)?'Owned':fmt(u.cost)}</button></div>`).join('');$('upgrades').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(b.dataset.buy));
+const gs=[['Ship 3 orders',S.shipped,3,'ship'],['Earn Rp 150.000 profit',S.profit,150000,'profit'],['Buy an upgrade',S.owned.length,1,'upgrade']];$('goals').innerHTML=gs.map(([name,v,t,id])=>`<div><div class="goalrow"><span>${S.claimed.includes(id)?'✅':'🎯'} ${name}</span><span>${id==='profit'?fmt(v)+' / '+fmt(t):v+' / '+t}</span></div><div class="bar"><span style="width:${Math.min(100,v/t*100)}%"></span></div></div>`).join('');}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2200);}
+function poly(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+function rr(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+function text(t,x,y,size,color,weight='700',align='left'){ctx.font=weight+' '+size+'px system-ui';ctx.fillStyle=color;ctx.textAlign=align;ctx.fillText(t,x,y);}
+function draw(){const w=1200,h=610;ctx.clearRect(0,0,w,h);const time=performance.now()/1000;
+const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#f7c99c');sky.addColorStop(1,'#f7e8cb');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+// back wall and window
+poly([[0,0],[1200,0],[1200,350],[0,350]],'#f8d7af');poly([[0,0],[1200,0],[1200,32],[0,32]],'#ee754b');
+for(let i=0;i<8;i++){rr(35+i*145,42,115,180,5,['#f7b97c','#f8c58f','#f5b57b'][i%3],'#dc9568');rr(44+i*145,50,97,163,4,'#f7e6c9');}
+rr(430,58,340,198,8,'#e2f0f4','#b8a28d');rr(445,72,310,180,5,'#b8e0ec');poly([[445,190],[755,190],[755,252],[445,252]],'#fff5e7');rr(465,91,270,155,4,'#e6f7fa');text('S',600,145,50,'#ee4d2d','900','center');text('Seller Sprint',600,180,21,'#ee4d2d','900','center');text('SHOP & GROW',600,210,12,'#d85b3d','800','center');
+// side shelves
+for(let side=0;side<2;side++){const x=side?1000:0;rr(x,190,180,260,7,'#a65b3a','#87422d');for(let row=0;row<4;row++){rr(x+8,205+row*57,164,9,'#df9b61');for(let c=0;c<4;c++){const bx=x+15+c*39,by=174+row*57;rr(bx,by,30,29,5,['#ffb85e','#6a9db7','#d77a58','#86b68a','#b58cd2'][(row+c+side)%5]);text(['🎧','🎒','👟','📦','🎁'][(row*2+c)%5],bx+15,by+21,15,'#fff','700','center');}}}
+// floor tiles
+poly([[0,350],[1200,350],[1200,610],[0,610]],'#f4dfbd');for(let y=360;y<640;y+=55){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.strokeStyle='#e7c9a5';ctx.lineWidth=2;ctx.stroke();}for(let x=-300;x<1500;x+=150){ctx.beginPath();ctx.moveTo(600,350);ctx.lineTo(x,610);ctx.strokeStyle='#e8cba8';ctx.lineWidth=2;ctx.stroke();}
+// checkout counter
+poly([[80,365],[330,365],[410,414],[160,414]],'#ff9b52');poly([[160,414],[410,414],[410,495],[160,495]],'#e85b38');poly([[80,365],[160,414],[160,495],[80,446]],'#f47a45');rr(190,384,75,33,5,'#333b4d');rr(198,390,59,21,3,'#8bd7c8');text('SELLER',285,457,19,'#fff','900','center');text('PACKING',285,477,10,'#ffe4d4','800','center');
+// plants
+function plant(x,y,s=1){ctx.save();ctx.translate(x,y);ctx.scale(s,s);rr(-12,-2,24,25,5,'#d76d44');ctx.fillStyle='#5aab70';ctx.beginPath();ctx.ellipse(-8,-16,8,17,-.6,0,Math.PI*2);ctx.ellipse(8,-21,8,18,.6,0,Math.PI*2);ctx.ellipse(0,-30,7,17,0,0,Math.PI*2);ctx.fill();ctx.restore();}
+plant(400,330,1.1);plant(835,328,.9);plant(1100,468,.8);
+// poster
+rr(1030,55,135,110,5,'#ee4d2d');text('GROW',1097,88,19,'#fff','900','center');text('YOUR',1097,112,19,'#fff','900','center');text('BUSINESS!',1097,136,15,'#fff','900','center');
+// parcels
+function parcel(x,y,s=1,flap=false){ctx.save();ctx.translate(x,y);ctx.scale(s,s);poly([[0,0],[30,-13],[61,0],[31,15]],'#f6bd77','#c88850');poly([[0,0],[31,15],[31,48],[0,32]],'#d99455','#bd7c44');poly([[31,15],[61,0],[61,32],[31,48]],'#e8a664','#bd7c44');poly([[22,-5],[31,0],[40,-4],[31,15]],'#fff0d9');text('S',31,34,16,'#fff5df','900','center');if(flap){ctx.beginPath();ctx.moveTo(31,15);ctx.lineTo(31,48);ctx.strokeStyle='#c48248';ctx.stroke();}ctx.restore();}
+parcel(450,390,1.2);parcel(510,405,1);parcel(475,348,.9);parcel(950,420,1.3);parcel(1010,450,.9);
+// seller character, walking animation
+walk.phase+=.09;walk.x+=(walk.tx-walk.x)*.035;walk.y+=(walk.ty-walk.y)*.035;const bob=Math.sin(walk.phase*2)*3,step=Math.sin(walk.phase*3)*7;
+ctx.save();ctx.translate(walk.x,walk.y+bob);ctx.fillStyle='#c8a27d55';ctx.beginPath();ctx.ellipse(0,5,35,12,0,0,Math.PI*2);ctx.fill();
+// legs and shoes
+rr(-17,-7+Math.max(0,step),13,27,5,'#30394c');rr(4,-7-Math.max(0,step),13,27,5,'#30394c');rr(-21,15+Math.max(0,step),20,9,4,'#f7f2e9');rr(2,15+Math.max(0,-step),20,9,4,'#f7f2e9');
+
+// body and arms
+
+
+ // body and animated packing arms
+ const isPacking = packingJobs.length > 0;
+ const handMove = Math.sin(time * 12) * 5;
+ const handY = isPacking
+   ? -9 + Math.sin(time * 15) * 4
+   : -24 + Math.sin(walk.phase * 2) * 3;
+
+ const leftHandX = isPacking
+   ? -70 + handMove
+   : -34 + Math.sin(walk.phase * 2) * 5;
+
+ const rightHandX = isPacking
+   ? -48 - handMove
+   : 35 - Math.sin(walk.phase * 2) * 5;
+
+ // Body
+ rr(-26,-54,52,52,15,'#ee4d2d');
+ rr(-18,-48,36,25,8,'#ff8050');
+ text('S',0,-29,21,'#fff','900','center');
+
+ // Left arm: shoulder -> elbow -> hand
+ ctx.strokeStyle='#d49a73';
+ ctx.lineWidth=10;
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+
+ ctx.beginPath();
+ ctx.moveTo(-22,-42);
+ ctx.lineTo(isPacking ? -35 : -30,-28);
+ ctx.lineTo(leftHandX,handY);
+ ctx.stroke();
+
+ // Right arm
+ ctx.beginPath();
+ ctx.moveTo(22,-42);
+ ctx.lineTo(isPacking ? 12 : 30,-27);
+ ctx.lineTo(rightHandX,handY + 2);
+ ctx.stroke();
+
+ // Hands
+ ctx.fillStyle='#f2bd91';
+ ctx.beginPath();
+ ctx.arc(leftHandX,handY,6,0,Math.PI*2);
+ ctx.arc(rightHandX,handY+2,6,0,Math.PI*2);
+ ctx.fill();
+
+
+
+
+
+ // head and hair - blank face, no eyes or mouth
+ ctx.fillStyle='#f2bd91';
+ ctx.beginPath();
+ ctx.ellipse(0,-72,25,28,0,0,Math.PI*2);
+ ctx.fill();
+
+ // Hair
+ ctx.fillStyle='#382b2b';
+ ctx.beginPath();
+ ctx.arc(0,-81,26,Math.PI,Math.PI*2);
+ ctx.lineTo(24,-68);
+ ctx.quadraticCurveTo(10,-84,-5,-74);
+ ctx.quadraticCurveTo(-18,-66,-24,-71);
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.restore();
+
+
+// Visible packing sequence: place item, fold carton flaps, apply tape, add label.
+if(packingJobs.length){
+ const job=packingJobs[0], p=P.find(a=>a.id===job.product);
+ job.progress+=0.0085;
+ const q=Math.min(1,job.progress), px=355, py=355;
+ if(q<.22){
+   ctx.save();ctx.globalAlpha=Math.min(1,q/.08);
+   text(p.emoji,px,py-18,36,'#252b3a','700','center');
+   text('Placing item in box…',px,py+17,12,'#ee4d2d','800','center');ctx.restore();
+ } else {
+   const fold=Math.min(1,(q-.22)/.22);
+   poly([[px-33,py-12],[px,py+2],[px+33,py-12],[px,py-27]],'#e6a664','#b97842');
+   poly([[px-33,py-12],[px,py+2],[px,py+37],[px-33,py+22]],'#d99455','#bd7c44');
+   poly([[px,py+2],[px+33,py-12],[px+33,py+22],[px,py+37]],'#e8a664','#bd7c44');
+   if(fold<1){
+     poly([[px-33,py-12],[px-49+fold*16,py-32],[px-9,py-18],[px,py+2]],'#f6bd77','#c88850');
+     poly([[px+33,py-12],[px+49-fold*16,py-32],[px+9,py-18],[px,py+2]],'#f6bd77','#c88850');
+     text('Folding carton flaps…',px,py+54,12,'#ee4d2d','800','center');
+   } else {
+     poly([[px-33,py-12],[px-15,py-29],[px,py-19],[px,py+2]],'#f6bd77','#c88850');
+     poly([[px+33,py-12],[px+15,py-29],[px,py-19],[px,py+2]],'#f6bd77','#c88850');
+     if(q<.78){
+       ctx.strokeStyle='#ffe6a3';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(px,py-20);ctx.lineTo(px,py+32*(q-.44)/.34);ctx.stroke();
+       text('Sealing with tape…',px,py+54,12,'#ee4d2d','800','center');
+     } else {
+       rr(px-15,py-16,30,18,3,'#fff5dc','#c88850');text('S',px,py-3,13,'#ee4d2d','900','center');
+       text('Adding shipping label…',px,py+54,12,'#16885a','800','center');
+     }
+   }
+ }
+ if(job.progress>=1){packingJobs.shift();finishPacking(job);}
+}
+if(S.running){rr(walk.x+25,walk.y-118,105,36,12,'#fff','#edbda5');text(packingJobs.length?'📦 Packing!':'Ready for orders',walk.x+77,walk.y-96,13,'#ee4d2d','900','center');}
+// moving customers
+customers.forEach(c=>{c.x-=1.1;c.life-=.008;ctx.save();ctx.globalAlpha=Math.max(0,c.life);ctx.fillStyle='#f1b88b';ctx.beginPath();ctx.arc(c.x,c.y-30,14,0,Math.PI*2);ctx.fill();rr(c.x-13,c.y-17,26,36,9,'#6d8ed2');rr(c.x-18,c.y+15,13,22,5,'#41465a');rr(c.x+5,c.y+15,13,22,5,'#41465a');ctx.restore();});customers=customers.filter(c=>c.life>0);
+// flying parcels
+boxes.forEach(b=>{b.t+=.025;b.x+=(b.tx-b.x)*.04;b.y+=(b.ty-b.y)*.04;parcel(b.x+Math.sin(b.t*10)*5,b.y-20*Math.sin(b.t*Math.PI),.45);});boxes=boxes.filter(b=>b.t<1.7);
+
+  // Update dan gambar mobil kurir
+  updateCourierVans();
+
+ deliveryJobs.forEach(van => {
+  drawCourierVan(van);
+  drawLoadingParcel(van);
+});
+
+particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=.012;ctx.globalAlpha=Math.max(0,p.life);text(p.emoji,p.x,p.y,16,'#fff','700','center');});ctx.globalAlpha=1;particles=particles.filter(p=>p.life>0);
+floating.forEach(f=>{f.y-=.7;f.life-=.012;ctx.globalAlpha=Math.max(0,f.life);text(f.text,f.x,f.y,17,'#159b63','900','center');});ctx.globalAlpha=1;floating=floating.filter(f=>f.life>0);
+// floating HUD on scene
+rr(18,18,220,55,15,'#ffffffed','#f0d3bd');text('🏪  LEVEL '+S.level,34,40,14,'#252b3a','900');rr(35,47,185,8,5,'#e9edf3');rr(35,47,Math.min(185,S.xp/(S.level*165)*185),8,5,'#ee4d2d');rr(960,18,220,55,15,'#ffffffed','#f0d3bd');text('🪙 '+fmt(S.cash),1070,41,15,'#252b3a','900','center');text(S.running?'SHOP IS OPEN':'READY WHEN YOU ARE',1070,57,9,'#7b8392','800','center');
+requestAnimationFrame(draw);}
+canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1200,y=(e.clientY-r.top)/r.height*610;if(x>75&&x<420&&y>350&&y<510){if(S.running)toast('Packing counter: use Pack & ship on an order below.');else toast('Open the shop to start playing.');}else if(x>930&&y>390){toast('Inventory shelves: restock items below.');}else if(x>400&&x<800&&y>330&&y<500){toast('Tap Pack & ship to send a parcel flying!');}});
+$('start').onclick=startGame;$('how').onclick=how;
+
+$('soundToggle').onclick = () => {
+  sound = !sound;
+
+  $('soundToggle').textContent = sound
+    ? '🔊 Sound ON'
+    : '🔇 Sound OFF';
+
+  if (sound) {
+    initAudio();
+    playTone(700, 0.12, 'sine', 0.05);
+  }
+};
+
+reset();
+})();
+</script>
+</body></html>
